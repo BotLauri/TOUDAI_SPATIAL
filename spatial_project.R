@@ -3,9 +3,9 @@
 
 # Set up. 
 setwd("~/GitHub/TOUDAI_SPATIAL")
-df <- read.csv(file = "data_kommuner.csv", header=FALSE, stringsAsFactors=FALSE, fileEncoding="latin1")
-df2 <- read.csv(file = "data_län_ålder.csv", header=FALSE, stringsAsFactors=FALSE, fileEncoding="latin1")
-# TODO: Fix the institution data and get the decreases data frames.
+flow_of_people <- read.csv(file = "Data/data_län_ålder.csv", header=TRUE, stringsAsFactors=FALSE, fileEncoding="latin1")
+universities <- read.csv(file = "Data/institution_data.csv", header=TRUE, stringsAsFactors=FALSE, fileEncoding="latin1")
+# TODO: Fix the institution data and get the decreased data frames.
 # TODO: Get both data before 96 and after 96 and merge them to get data of the whole system. 
 
 # TODO: Add change color based on how many people move in and out. 
@@ -24,4 +24,3 @@ df2 <- read.csv(file = "data_län_ålder.csv", header=FALSE, stringsAsFactors=FA
 #Inrikes utflyttningar
 #Med inrikes utflyttningar avses utflyttningar minus emigration.
 
-print(df[1:2, 3:263]) # All data.

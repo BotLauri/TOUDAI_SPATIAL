@@ -1,29 +1,35 @@
-# Sweden map. Thanks to: https://github.com/reinholdsson/swemaps
+# Set up. 
+setwd("~/GitHub/TOUDAI_SPATIAL")
+flow_of_people <- read.csv(file = "Data/data_län_ålder.csv", header=TRUE, stringsAsFactors=FALSE, fileEncoding="latin1")
+universities <- read.csv(file = "Data/institution_data.csv", header=TRUE, stringsAsFactors=FALSE, fileEncoding="latin1")
 
-# install.packages('devtools')
-devtools::install_github('reinholdsson/swemaps')
+# Set up and simple Sweden map. 
+# https://github.com/junkka/histmaps
+devtools::install_github('junkka/histmaps')
+library(histmaps)
+library(sf)
+## Linking to GEOS 3.10.1, GDAL 3.4.0, PROJ 8.2.0; sf_use_s2() is TRUE
+library(tidyverse)
+map <- get_boundaries(1990, "county")
+#plot(st_geometry(map))
 
-library(leaflet)  # devtools::install_github("rstudio/leaflet")
-library(plotrix)
+# Get the counties with at least one higher instiution to a separate data set. 
+university_county <- unique(universities[3])
+nr_uni_county <- universities %>%
+  group_by(county) %>%
+  summarise(n = n()) %>%
+  ungroup()
 
-# function to merge kolada data with map data from swemaps
-prepare_map_data <- function(x) {
-  x$knkod <- x$municipality.id
-  data <- merge(map_kn, x, by = 'knkod')
-  data[order(data$order),]  # make sure it's sorted by "order" column
-}
+# Get the data for each county. 
+st_map <- map %>% left_join(geom_meta, by = c("geom_id"))
+st_map <- st_map %>% right_join(university_county, by = c("county"))
+st_map <- st_map %>% right_join(nr_uni_county, by = c("county"))
 
-# rkolada conn
-a <- rkolada::rkolada()
-
-x <- a$values('N01963', year = 2010)
-x <- subset(x, gender == 'T')
-x <- prepare_map_data(x)
-x$color <- substring(color.scale(x$value, c(1,1,0), c(0,1,1), 0), 1, 7)
-
-m <- leaflet() %>% addTiles()
-for (kn in unique(x$knkod)) {
-  i <- x[x$knkod == kn,]
-  m <- m %>% addPolygons(i$leaflet_long, i$leaflet_lat, color = i$color[[1]], weight = 1)
-}
-m
+# Plot with different colors based on how many instituions within the county. 
+ggplot() +
+  geom_sf(data = map, color = "black", fill = "lightgray") +
+  geom_sf(data = st_map %>% filter(n == 1), color = "black", fill = "blue") +
+  geom_sf(data = st_map %>% filter(n == 2), color = "black", fill = "red") +
+  geom_sf(data = st_map %>% filter(n == 4), color = "black", fill = "green") +
+  geom_sf(data = st_map %>% filter(n == 13), color = "black", fill = "yellow") +
+  theme_minimal()
