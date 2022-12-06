@@ -1,7 +1,6 @@
 # Set up. 
 setwd("~/GitHub/TOUDAI_SPATIAL")
-flow_of_people <- read.csv(file = "Data/data_län_ålder.csv", header=TRUE, stringsAsFactors=FALSE, fileEncoding="latin1")
-universities <- read.csv(file = "Data/institution_data.csv", header=TRUE, stringsAsFactors=FALSE, fileEncoding="latin1")
+universities <- read.csv(file = "Data/institution_data.csv", header=TRUE, stringsAsFactors=FALSE, fileEncoding="latin1") # nolint
 
 # Set up and simple Sweden map. 
 # https://github.com/junkka/histmaps
