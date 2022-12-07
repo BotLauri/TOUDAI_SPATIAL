@@ -66,16 +66,17 @@ pred_tot = reg.predict(years)
 pred_change = reg2.predict(years2)
 #print("Coefficients: \n", reg.coef_, reg.intercept_)
 # The coefficient of determination.
-#print("Coefficient of determination: %.2f" % r2_score(sweden_tot, pred_tot))
+print("Coefficient of determination: %.2f" % r2_score(sweden_tot, pred_tot))
+print("Coefficient of determination: %.2f" % r2_score(sweden_change, pred_change))
 
 # Plot outputs
-#plt.scatter(years, sweden_tot, color="black", label='Population data')
-#plt.plot(years, pred_tot, color="blue", linewidth=2, label='Linear regression')
-#plt.title('Swedens population and a linear regression.')
-#plt.legend()
-#plt.xticks(())
-#plt.yticks(())
-#plt.show()
+plt.scatter(years2 + 1968, sweden_change, color="black", label='Population data')
+plt.plot(years2 + 1968, pred_change, color="blue", linewidth=2, label='Linear regression')
+plt.title('Swedens population change per year.')
+plt.legend()
+plt.xlabel("Year")
+plt.ylabel("Population change")
+plt.show()
 
 # Get proportion pop which is just a proportion of tot_pop. 
 # Sum each county. 
